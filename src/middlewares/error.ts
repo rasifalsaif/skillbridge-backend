@@ -37,7 +37,14 @@ export const globalErrorHandler = (error: Error | ApiError, req: Request, res: R
         message = "A database error occurred while processing your request."
     }
 
-    console.log(error);
+    console.error('[ERROR HANDLER]', {
+        statusCode,
+        message,
+        errorName: error?.name,
+        errorMessage: error?.message,
+        stack: error?.stack
+    });
+    
     res.status(statusCode).json({
         success: false,
         message: message

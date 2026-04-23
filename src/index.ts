@@ -9,22 +9,40 @@ import { globalErrorHandler } from './middlewares/error'
 import { FRONTEND_URL, PORT } from './lib/env'
 import cors from "cors"
 
-const port = PORT || 5000
+const port = Number(PORT) || 5000
 
 const server = express()
 server.use(express.json())
+server.use(express.urlencoded({ extended: true }))
 server.use(cors({
     origin: FRONTEND_URL,
     credentials: true,
 }))
+
+// Routes
 server.use('/api', authRouter)
 server.use('/api', adminRouter)
 server.use('/api', userRouter)
 server.use('/api', tutorRouter)
 server.use('/api', bookingRouter)
 server.use('/api', reviewRouter)
+
+// Health check endpoint
+server.get('/api/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date().toISOString() })
+})
+
+// 404 handler
+server.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found'
+    })
+})
+
+// Error handler (must be last)
 server.use(globalErrorHandler)
 
-server.listen(port, () => {
+server.listen(port, '0.0.0.0', () => {
     console.log(`[SERVER IS RUNNING ON PORT ${port}]`);
 })

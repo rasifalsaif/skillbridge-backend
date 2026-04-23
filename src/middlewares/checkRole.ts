@@ -13,8 +13,12 @@ import { ApiError } from "../utils/ApiError";
  * If the user's role doesn't match, the request is rejected with 403 Forbidden.
  */
 export const checkRole = (role: keyof typeof Role) => (req: Request, res: Response, next: NextFunction) => {
-    if (req.user!.role !== role) {
-        throw new ApiError(403, "Forbidden. You don't have sufficient permission to perform this action")
+    try {
+        if (req.user!.role !== role) {
+            throw new ApiError(403, "Forbidden. You don't have sufficient permission to perform this action")
+        }
+        next()
+    } catch (error) {
+        next(error)
     }
-    next()
 };
