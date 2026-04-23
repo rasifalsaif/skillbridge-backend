@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  STUDENT
+  TUTOR
+  ADMIN
+}
+
+enum BookingStatus {
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String        @id @default(uuid())
+  name         String
+  email        String        @unique
+  password     String
+  role         Role
+  tutorProfile TutorProfile?
+  bookings     Booking[]
+  isBanned     Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model TutorProfile {
+  id                String             @id @default(uuid())
+  bio               String             @db.Text
+  hourlyRate        Float
+  userId            String             @unique
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryId        String?
+  category          Category?          @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  bookings          Booking[]
+  reviews           Review[]
+  availabilitySlots AvailabilitySlot[]
+}
+
+model AvailabilitySlot {
+  id             String       @id @default(uuid())
+  tutor          TutorProfile @relation(fields: [tutorProfileId], references: [id])
+  tutorProfileId String
+  startTime      DateTime
+  endTime        DateTime
+  isBooked       Boolean      @default(false)
+}
+
+model Category {
+  id       String         @id @default(uuid())
+  name     String
+  tutors   TutorProfile[]
+  bookings Booking[]
+}
+
+model Booking {
+  id             String        @id @default(uuid())
+  student        User          @relation(fields: [studentId], references: [id])
+  studentId      String
+  tutor          TutorProfile  @relation(fields: [tutorProfileId], references: [id])
+  tutorProfileId String
+  category       Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId     String?
+  startTime      DateTime
+  endTime        DateTime
+  status         BookingStatus @default(CONFIRMED)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+}
+
+model Review {
+  id             String        @id @default(uuid())
+  rating         Int
+  comment        String        @db.Text
+  studentId      String
+  tutorProfile   TutorProfile? @relation(fields: [tutorProfileId], references: [id])
+  tutorProfileId String?
+  createdAt      DateTime      @default(now())
+}
