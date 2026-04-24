@@ -42,3 +42,5 @@ yarn-error.log*
 next-env.d.ts
 
 src/generated*
+# build artifacts
+api/index.js

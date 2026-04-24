@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "check": "tsc --noEmit",
-    "build": "tsup src/index.ts --format esm --clean", 
+    "build": "tsup src/index.ts --format esm --clean --out-dir api", 
     "start": "node .",
     "db:gen": "prisma generate",
     "db:push": "prisma generate && prisma db push",
