@@ -32,6 +32,10 @@ server.get('/api/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date().toISOString() })
 })
 
+server.get('/', (req, res) => {
+    res.json({ message: 'SkillBridge API is running', documentation: 'https://github.com/mryasinize/skillbridge-backend' })
+})
+
 // 404 handler
 server.use((req, res) => {
     res.status(404).json({
