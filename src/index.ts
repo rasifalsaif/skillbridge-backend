@@ -43,6 +43,12 @@ server.use((req, res) => {
 // Error handler (must be last)
 server.use(globalErrorHandler)
 
-server.listen(port, '0.0.0.0', () => {
-    console.log(`[SERVER IS RUNNING ON PORT ${port}]`);
-})
+// Export for serverless
+export default server
+
+// Local development
+if (process.env.NODE_ENV !== 'production') {
+    server.listen(port, '0.0.0.0', () => {
+        console.log(`[SERVER IS RUNNING ON PORT ${port}]`);
+    })
+}
