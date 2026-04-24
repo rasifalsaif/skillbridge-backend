@@ -20,12 +20,12 @@ server.use(cors({
 }))
 
 // Routes
-server.use('/', authRouter)
-server.use('/', adminRouter)
-server.use('/', userRouter)
-server.use('/', tutorRouter)
-server.use('/', bookingRouter)
-server.use('/', reviewRouter)
+server.use('/api', authRouter)
+server.use('/api', adminRouter)
+server.use('/api', userRouter)
+server.use('/api', tutorRouter)
+server.use('/api', bookingRouter)
+server.use('/api', reviewRouter)
 
 // Health check endpoint
 server.get('/api/health', (req, res) => {
